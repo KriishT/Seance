@@ -8,7 +8,9 @@ async function fetchGoogleImage(query: string): Promise<string | null> {
     const res = await fetch(url);
     if (!res.ok) return null;
     const data = await res.json();
-    return data.items?.[0]?.link ?? null;
+    const item = data.items?.[0];
+    // thumbnailLink is Google-proxied — no hotlink blocking
+    return item?.image?.thumbnailLink ?? item?.link ?? null;
   } catch {
     return null;
   }
