@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
           );
         }
         imageFiles.push(file);
+        if (imageFiles.length === 2) break;
       }
     }
 
@@ -116,7 +117,7 @@ export async function POST(req: NextRequest) {
 
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 2500,
+      max_tokens: 2800,
       system: DIAGNOSIS_SYSTEM_PROMPT,
       messages: [
         {

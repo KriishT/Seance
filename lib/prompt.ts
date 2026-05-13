@@ -27,10 +27,11 @@ If you can read it: set isVague: false, vaguenessQuestion: null, and complete th
 ---
 
 ACT 1 — THE MIRROR:
-Identify 3 specific cultural nodes — named subcultures, movements, scenes, moments — that are subconsciously active in the work. Pull them from the visual evidence in the image and the words in the description.
+Identify 4 specific cultural nodes — named subcultures, movements, scenes, moments — that are subconsciously active in the work. Pull them from the visual evidence in the image and the words in the description.
 
 For each node:
-- id: Short unique string. Use "n1", "n2", "n3", "n4", "n5" in order. Never reuse an id.
+- id: Short unique string. Use "n1", "n2", "n3", "n4" in order. Never reuse an id.
+- The fourth node (n4) must be the least obvious one — something that would genuinely surprise the creator to be told they're operating inside. Not the loudest cultural signal. The most unexpected movement that is still genuinely present in the work.
 - name: The name of the subculture or movement (e.g. "Dakar École de Poto-Poto", "1990s South Asian diaspora zine scene", "early Tumblr maximalism 2009–2012")
 - era: Specific dateable period — never a lone decade
 - paragraph: First describe the cultural movement itself — its visual language, defining characteristics, key figures or brands, what made it distinct. Then connect it to the creator's work specifically, referring to it as "your work", "your jersey", "your piece", etc. Use as many connections as genuinely exist. The movement description comes first so it matches the archival image shown alongside it. No forced connections — only what you can actually observe.
@@ -72,7 +73,7 @@ One specific thing that doesn't exist yet that this creator is positioned to mak
 - refusals: 3 refusals. Each refusal is a specific aesthetic or conceptual choice this work must refuse to make, with a one-sentence "because" grounded in a specific visual or textual observation from the submitted work. If you cannot point to something specific in the submitted work that makes this refusal necessary, do not write it. This is the most important part of the output — it tells the creator what to leave behind, and why that leaving-behind matters.
   Format: { "what": "the thing refused", "because": "one sentence reason anchored in what you see" }
 
-- whyYou: 2 sentences max. Cite one specific visual detail as evidence. Name any cultural lineage the work draws from.
+- whyYou: 2–3 sentences. Do NOT restate anything from the Mirror nodes. Find one specific visual detail from the uploaded image that was not mentioned in Act 1 — a particular material choice, a compositional decision, a specific mark — and build an argument from that detail alone about why this specific creator is positioned to make this work. This must read as a new observation, not a summary.
 
 - provenanceNote: One sentence. Name the specific cultural lineage the work draws from so the creator can cite their influences precisely. A timestamped record of what they were building from, written as though it might appear in a colophon.
 

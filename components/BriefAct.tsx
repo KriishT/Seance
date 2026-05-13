@@ -182,40 +182,11 @@ export default function BriefAct({ brief, result, shareId }: BriefActProps) {
         </div>
       </div>
 
-      {/* Actions */}
+      {/* Generate actions — surfaced early, most immediately useful */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.3 }}
-        className="flex gap-4"
-      >
-        <button
-          onClick={handleCopy}
-          className="flex-1 py-3 border border-border rounded-xl text-xs font-sans uppercase tracking-widest text-muted hover:text-charcoal hover:border-charcoal/30 transition-all duration-300"
-        >
-          Copy as text
-        </button>
-        {shareId && (
-          <button
-            onClick={handleShare}
-            className="flex-1 py-3 border border-lavender bg-lavender-light rounded-xl text-xs font-sans uppercase tracking-widest text-charcoal/70 hover:text-charcoal hover:border-lavender transition-all duration-300"
-          >
-            {shareCopied ? "Link copied" : "Share"}
-          </button>
-        )}
-        <button
-          onClick={handlePrint}
-          className="flex-1 py-3 bg-charcoal text-paper rounded-xl text-xs font-sans uppercase tracking-widest hover:bg-charcoal/90 transition-all duration-300"
-        >
-          Save / Print
-        </button>
-      </motion.div>
-
-      {/* Generate actions */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
         className="space-y-3"
       >
         <GenerateBlock
@@ -242,6 +213,35 @@ export default function BriefAct({ brief, result, shareId }: BriefActProps) {
           loading={generating === "scaledown"}
           onGenerate={() => generate("scaledown")}
         />
+      </motion.div>
+
+      {/* Secondary actions */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="flex gap-4"
+      >
+        <button
+          onClick={handleCopy}
+          className="flex-1 py-3 border border-border rounded-xl text-xs font-sans uppercase tracking-widest text-muted hover:text-charcoal hover:border-charcoal/30 transition-all duration-300"
+        >
+          Copy as text
+        </button>
+        {shareId && (
+          <button
+            onClick={handleShare}
+            className="flex-1 py-3 border border-lavender bg-lavender-light rounded-xl text-xs font-sans uppercase tracking-widest text-charcoal/70 hover:text-charcoal hover:border-lavender transition-all duration-300"
+          >
+            {shareCopied ? "Link copied" : "Share"}
+          </button>
+        )}
+        <button
+          onClick={handlePrint}
+          className="flex-1 py-3 bg-charcoal text-paper rounded-xl text-xs font-sans uppercase tracking-widest hover:bg-charcoal/90 transition-all duration-300"
+        >
+          Save / Print
+        </button>
       </motion.div>
     </motion.div>
   );
