@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
 
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 1500,
+      max_tokens: 2500,
       system: DIAGNOSIS_SYSTEM_PROMPT,
       messages: [
         {
@@ -147,6 +147,7 @@ export async function POST(req: NextRequest) {
         .trim();
       parsed = JSON.parse(clean);
     } catch {
+      console.error("[diagnose] JSON parse failed. Raw response:", rawText.slice(0, 500));
       return NextResponse.json(
         { error: "Failed to parse diagnosis. Please try again." },
         { status: 500 }
