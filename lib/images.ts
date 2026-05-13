@@ -62,12 +62,12 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
 
 // Mirror nodes are art-historical — try Met first, fall back to Serp
 export async function fetchMirrorImage(query: string): Promise<string | null> {
-  const met = await withTimeout(fetchMetImage(query), 4000);
+  const met = await withTimeout(fetchMetImage(query), 8000);
   if (met) return met;
-  return withTimeout(fetchSerpImage(query), 4000);
+  return withTimeout(fetchSerpImage(query), 8000);
 }
 
 // Roads entries span music/film/fashion — SerpAPI only
 export async function fetchRoadImage(query: string): Promise<string | null> {
-  return withTimeout(fetchSerpImage(query), 4000);
+  return withTimeout(fetchSerpImage(query), 8000);
 }

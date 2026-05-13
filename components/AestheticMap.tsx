@@ -86,14 +86,14 @@ function runSimulation(nodes: SimNode[], edges: MapRelationship[]): SimNode[] {
 
     for (const n of ns) {
       if (n.fixed) continue;
-      n.vx += (W / 2 - n.x) * 0.003;
-      n.vy += (H / 2 - n.y) * 0.003;
+      n.vx += (W / 2 - n.x) * 0.006;
+      n.vy += (H / 2 - n.y) * 0.006;
       const speed = Math.sqrt(n.vx * n.vx + n.vy * n.vy) || 0.001;
       const capped = Math.min(speed, 14 * cool);
       n.x += (n.vx / speed) * capped;
       n.y += (n.vy / speed) * capped;
-      n.x = Math.max(80, Math.min(W - 80, n.x));
-      n.y = Math.max(60, Math.min(H - 60, n.y));
+      n.x = Math.max(120, Math.min(W - 120, n.x));
+      n.y = Math.max(80, Math.min(H - 80, n.y));
     }
   }
   return ns;
@@ -389,7 +389,7 @@ export default function AestheticMap({ result, description }: Props) {
             const radius = r(node);
             const isSelected = selectedId === node.id;
             const isDimmed = selectedId && !isSelected && !relatedIds.includes(node.id) && node.id !== "creator";
-            const showLabel = node.kind === "creator" || node.kind === "node" || isSelected;
+            const showLabel = node.kind === "creator" || node.kind === "node" || node.kind === "road";
 
             return (
               <motion.g
