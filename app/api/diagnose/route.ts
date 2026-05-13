@@ -1,5 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
+
+export const maxDuration = 60;
 import { DIAGNOSIS_SYSTEM_PROMPT } from "@/lib/prompt";
 import { fetchMirrorImage, fetchRoadImage } from "@/lib/images";
 import { saveShare } from "@/lib/store";
