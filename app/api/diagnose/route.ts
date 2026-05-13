@@ -1,7 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { DIAGNOSIS_SYSTEM_PROMPT } from "@/lib/prompt";
-import { fetchNodeImage } from "@/lib/serpapi";
+import { fetchMirrorImage, fetchRoadImage } from "@/lib/images";
+import { saveShare } from "@/lib/store";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
@@ -31,12 +32,20 @@ export interface BriefRefusal {
   because: string;
 }
 
+export interface ForkOption {
+  id: string;
+  name: string;
+  description: string;
+  signal: string;
+}
+
 export interface DiagnosisResult {
   isVague: boolean;
   vaguenessQuestion: string | null;
+  isFork?: boolean;
+  forkOptions?: ForkOption[] | null;
   mirror: {
     nodes: MirrorNode[];
-    coinedAesthetic: string;
   };
   roadsTaken: RoadEntry[];
   brief: {
@@ -46,12 +55,14 @@ export interface DiagnosisResult {
     whyYou: string;
     provenanceNote: string;
   };
+  shareId?: string;
 }
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const description = formData.get("description") as string;
+    const friction = (formData.get("friction") as string | null) ?? "";
 
     const imageFiles: File[] = [];
     for (let i = 0; i < 4; i++) {
@@ -94,7 +105,7 @@ export async function POST(req: NextRequest) {
 
     const response = await anthropic.messages.create({
       model: "claude-opus-4-7",
-      max_tokens: 6000,
+      max_tokens: 8000,
       system: DIAGNOSIS_SYSTEM_PROMPT,
       messages: [
         {
@@ -103,7 +114,11 @@ export async function POST(req: NextRequest) {
             ...imageBlocks,
             {
               type: "text",
-              text: `What they are making: ${description}${imageFiles.length > 1 ? `\n\n(${imageFiles.length} images — read them as a single body of work)` : ""}`,
+              text: [
+                `What they are making: ${description}`,
+                imageFiles.length > 1 ? `(${imageFiles.length} images — read them as a single body of work)` : "",
+                friction ? `What bothers them about it: ${friction}` : "",
+              ].filter(Boolean).join("\n\n"),
             },
           ],
         },
@@ -131,26 +146,36 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(parsed);
     }
 
+    if (parsed.isFork && parsed.forkOptions?.length) {
+      return NextResponse.json(parsed);
+    }
+
     // Fetch archival images for mirror nodes and roads in parallel
+    // Mirror nodes: Met API first (art-historical), falls back to SerpAPI
+    // Roads: SerpAPI only (spans music/film/fashion)
     const [nodesWithImages, roadsWithImages] = await Promise.all([
       Promise.all(
         parsed.mirror.nodes.map(async (node) => ({
           ...node,
-          imageUrl: await fetchNodeImage(node.imageQuery),
+          imageUrl: await fetchMirrorImage(node.imageQuery),
         }))
       ),
       Promise.all(
         parsed.roadsTaken.map(async (entry) => ({
           ...entry,
-          imageUrl: await fetchNodeImage(entry.imageQuery),
+          imageUrl: await fetchRoadImage(entry.imageQuery),
         }))
       ),
     ]);
 
+    const shareId = crypto.randomUUID();
+    saveShare(shareId, { brief: parsed.brief });
+
     return NextResponse.json({
       ...parsed,
-      mirror: { ...parsed.mirror, nodes: nodesWithImages },
+      mirror: { nodes: nodesWithImages },
       roadsTaken: roadsWithImages,
+      shareId,
     });
   } catch (err) {
     console.error("[diagnose]", err);

@@ -1,18 +1,49 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import type { DiagnosisResult } from "@/app/api/diagnose/route";
 
+type GenerateType = "statement" | "collaborator" | "scaledown";
+
 interface BriefActProps {
   brief: DiagnosisResult["brief"];
+  result: DiagnosisResult;
+  shareId?: string;
 }
 
-export default function BriefAct({ brief }: BriefActProps) {
+export default function BriefAct({ brief, result, shareId }: BriefActProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [generating, setGenerating] = useState<GenerateType | null>(null);
+  const [generated, setGenerated] = useState<Partial<Record<GenerateType, string>>>({});
+
+  const generate = async (type: GenerateType) => {
+    if (generating || generated[type]) return;
+    setGenerating(type);
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, result }),
+      });
+      const data = await res.json();
+      if (data.text) setGenerated((prev) => ({ ...prev, [type]: data.text }));
+    } finally {
+      setGenerating(null);
+    }
+  };
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleShare = async () => {
+    if (!shareId) return;
+    const url = `${window.location.origin}/share/${shareId}`;
+    await navigator.clipboard.writeText(url);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2500);
   };
 
   const handleCopy = async () => {
@@ -22,10 +53,10 @@ export default function BriefAct({ brief }: BriefActProps) {
       brief.thingThatDoesntExist,
       ``,
       `IT INCLUDES`,
-      ...brief.includes.map((s) => `— ${s}`),
+      ...brief.includes.map((s) => `· ${s}`),
       ``,
       `IT REFUSES`,
-      ...brief.refusals.map((r) => `— ${r.what}\n  Because: ${r.because}`),
+      ...brief.refusals.map((r) => `· ${r.what}\n  Because: ${r.because}`),
       ``,
       `WHY ME`,
       brief.whyYou,
@@ -164,6 +195,14 @@ export default function BriefAct({ brief }: BriefActProps) {
         >
           Copy as text
         </button>
+        {shareId && (
+          <button
+            onClick={handleShare}
+            className="flex-1 py-3 border border-lavender bg-lavender-light rounded-xl text-xs font-sans uppercase tracking-widest text-charcoal/70 hover:text-charcoal hover:border-lavender transition-all duration-300"
+          >
+            {shareCopied ? "Link copied" : "Share"}
+          </button>
+        )}
         <button
           onClick={handlePrint}
           className="flex-1 py-3 bg-charcoal text-paper rounded-xl text-xs font-sans uppercase tracking-widest hover:bg-charcoal/90 transition-all duration-300"
@@ -171,6 +210,100 @@ export default function BriefAct({ brief }: BriefActProps) {
           Save / Print
         </button>
       </motion.div>
+
+      {/* Generate actions */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="space-y-3"
+      >
+        <GenerateBlock
+          type="statement"
+          label="Generate artist statement"
+          description="150 words, first person, grant and portfolio ready."
+          output={generated.statement}
+          loading={generating === "statement"}
+          onGenerate={() => generate("statement")}
+        />
+        <GenerateBlock
+          type="collaborator"
+          label="Export for collaborator"
+          description="Third-person brief for a printer, gallerist, or creative director."
+          output={generated.collaborator}
+          loading={generating === "collaborator"}
+          onGenerate={() => generate("collaborator")}
+        />
+        <GenerateBlock
+          type="scaledown"
+          label="This is too big"
+          description="A weekend-sized gateway into the same project."
+          output={generated.scaledown}
+          loading={generating === "scaledown"}
+          onGenerate={() => generate("scaledown")}
+        />
+      </motion.div>
     </motion.div>
+  );
+}
+
+function GenerateBlock({
+  label,
+  description,
+  output,
+  loading,
+  onGenerate,
+}: {
+  type: GenerateType;
+  label: string;
+  description: string;
+  output?: string;
+  loading: boolean;
+  onGenerate: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    if (!output) return;
+    await navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="border border-border rounded-2xl overflow-hidden">
+      <button
+        onClick={onGenerate}
+        disabled={loading || !!output}
+        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-paper/60 transition-colors duration-200 disabled:cursor-default"
+      >
+        <div>
+          <p className="text-xs font-sans uppercase tracking-widest text-charcoal/70">{label}</p>
+          <p className="text-xs font-sans text-muted mt-0.5">{description}</p>
+        </div>
+        {loading ? (
+          <span className="text-xs font-sans text-muted animate-pulse">Writing...</span>
+        ) : output ? (
+          <span className="text-xs font-sans text-sage">Done</span>
+        ) : (
+          <span className="text-xs font-sans text-muted">Generate</span>
+        )}
+      </button>
+      {output && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="border-t border-border px-6 py-5 space-y-3"
+        >
+          <p className="font-serif text-sm text-charcoal leading-relaxed whitespace-pre-wrap">{output}</p>
+          <button
+            onClick={handleCopy}
+            className="text-xs font-sans uppercase tracking-widest text-muted hover:text-charcoal transition-colors duration-200"
+          >
+            {copied ? "Copied" : "Copy"}
+          </button>
+        </motion.div>
+      )}
+    </div>
   );
 }

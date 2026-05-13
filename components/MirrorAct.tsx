@@ -5,7 +5,6 @@ import type { MirrorNode } from "@/app/api/diagnose/route";
 
 interface MirrorActProps {
   nodes: MirrorNode[];
-  coinedAesthetic: string;
 }
 
 const NODE_ACCENTS = [
@@ -16,7 +15,7 @@ const NODE_ACCENTS = [
   { bg: "bg-lavender-light", border: "border-lavender", dot: "bg-lavender" },
 ];
 
-export default function MirrorAct({ nodes, coinedAesthetic }: MirrorActProps) {
+export default function MirrorAct({ nodes }: MirrorActProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -29,7 +28,7 @@ export default function MirrorAct({ nodes, coinedAesthetic }: MirrorActProps) {
           The Mirror
         </p>
         <p className="text-charcoal/50 font-serif text-base">
-          Four cultural currents underneath your work, and the name for what they become together.
+          The cultural currents underneath your work.
         </p>
       </div>
 
@@ -79,23 +78,6 @@ export default function MirrorAct({ nodes, coinedAesthetic }: MirrorActProps) {
         })}
       </div>
 
-      {/* Coined Aesthetic */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: nodes.length * 0.18 + 0.4 }}
-        className="bg-paper border border-border rounded-2xl p-8 space-y-2"
-      >
-        <p className="text-xs font-sans uppercase tracking-widest text-muted">
-          What you&apos;ve invented
-        </p>
-        <p className="text-4xl font-serif text-charcoal tracking-tight leading-none">
-          {coinedAesthetic}
-        </p>
-        <p className="text-sm font-sans text-muted leading-relaxed pt-1">
-          The name for what lives at the collision of all of the above. It didn&apos;t have a name before this.
-        </p>
-      </motion.div>
     </motion.div>
   );
 }

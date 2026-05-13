@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,60 +9,30 @@
 }
 
 html {
-  background: #F7F4EF;
-  color: #1C1917;
+  background: #0A0908;
+  color: #F0EDE8;
 }
 
 body {
-  background: #F7F4EF;
-  color: #1C1917;
+  background: #0A0908;
+  color: #F0EDE8;
   font-family: 'EB Garamond', Georgia, serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: #C4B5D033;
-  color: #1C1917;
+  background: rgba(201, 169, 110, 0.25);
+  color: #F0EDE8;
 }
 
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track { background: #F7F4EF; }
-::-webkit-scrollbar-thumb { background: #E7E3DC; border-radius: 2px; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #0A0908; }
+::-webkit-scrollbar-thumb { background: #252220; border-radius: 2px; }
 
 textarea:focus, input:focus { outline: none; }
 
-/* 3D perspective container */
-.perspective-container {
-  perspective: 1000px;
-  perspective-origin: 50% 50%;
-}
-
-/* CSS 3D cube */
-.cube {
-  width: 80px;
-  height: 80px;
-  position: relative;
-  transform-style: preserve-3d;
-  animation: spinSlow 28s linear infinite;
-}
-
-.cube-face {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  border: 1px solid rgba(196, 181, 208, 0.4);
-}
-
-.cube-front  { transform: rotateY(  0deg) translateZ(40px); background: rgba(196,181,208,0.12); }
-.cube-back   { transform: rotateY(180deg) translateZ(40px); background: rgba(212,165,165,0.10); }
-.cube-left   { transform: rotateY(-90deg) translateZ(40px); background: rgba(168,196,176,0.10); }
-.cube-right  { transform: rotateY( 90deg) translateZ(40px); background: rgba(212,192,138,0.10); }
-.cube-top    { transform: rotateX( 90deg) translateZ(40px); background: rgba(196,181,208,0.08); }
-.cube-bottom { transform: rotateX(-90deg) translateZ(40px); background: rgba(212,165,165,0.08); }
-
-/* Brief card print */
+/* Print — brief card only */
 @media print {
   body * { visibility: hidden !important; }
   #brief-card, #brief-card * { visibility: visible !important; }
@@ -71,5 +41,7 @@ textarea:focus, input:focus { outline: none; }
     inset: 0 !important;
     margin: auto !important;
     box-shadow: none !important;
+    background: #161412 !important;
+    color: #F0EDE8 !important;
   }
 }

@@ -2,149 +2,70 @@
 
 import { motion } from "framer-motion";
 
+const orbs = [
+  { r: "138,110,80",  size: 900, x: "75%", y: "5%",  dur: 42, delay: 0,  op: 0.14 },
+  { r: "100,90,140",  size: 700, x: "10%", y: "60%", dur: 50, delay: 8,  op: 0.11 },
+  { r: "80,120,100",  size: 580, x: "50%", y: "85%", dur: 36, delay: 16, op: 0.09 },
+  { r: "130,100,80",  size: 440, x: "88%", y: "55%", dur: 58, delay: 24, op: 0.08 },
+  { r: "100,80,120",  size: 380, x: "22%", y: "10%", dur: 30, delay: 6,  op: 0.10 },
+];
+
 export default function Background3D() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      {/* Top-right: large tilted lavender plane */}
-      <motion.div
-        className="absolute"
-        style={{
-          top: "-8%",
-          right: "-6%",
-          width: 420,
-          height: 420,
-          background:
-            "linear-gradient(135deg, rgba(196,181,208,0.28) 0%, rgba(212,165,165,0.14) 100%)",
-          borderRadius: 40,
-          border: "1px solid rgba(196,181,208,0.35)",
-          transformStyle: "preserve-3d",
-        }}
-        animate={{
-          rotateX: [16, 24, 16],
-          rotateY: [-22, -12, -22],
-          rotateZ: [4, 8, 4],
-          y: [0, -14, 0],
-        }}
-        transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
-      />
 
-      {/* Bottom-left: sage/amber floating block */}
-      <motion.div
-        className="absolute"
-        style={{
-          bottom: "12%",
-          left: "-4%",
-          width: 240,
-          height: 240,
-          background:
-            "linear-gradient(135deg, rgba(168,196,176,0.22) 0%, rgba(212,192,138,0.16) 100%)",
-          borderRadius: 24,
-          border: "1px solid rgba(168,196,176,0.3)",
-          transformStyle: "preserve-3d",
-        }}
-        animate={{
-          rotateX: [-8, 6, -8],
-          rotateY: [28, 18, 28],
-          rotateZ: [-4, 2, -4],
-          y: [0, -10, 0],
-        }}
-        transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-      />
-
-      {/* Center-left: small rose diamond */}
-      <motion.div
-        className="absolute"
-        style={{
-          top: "38%",
-          left: "5%",
-          width: 120,
-          height: 120,
-          background: "rgba(212,165,165,0.18)",
-          border: "1px solid rgba(212,165,165,0.28)",
-          transformStyle: "preserve-3d",
-          rotate: 45,
-        }}
-        animate={{
-          rotateX: [10, 20, 10],
-          rotateZ: [45, 52, 45],
-          y: [0, -18, 0],
-          opacity: [0.6, 1, 0.6],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-      />
-
-      {/* Top-left: tiny lavender square */}
-      <motion.div
-        className="absolute"
-        style={{
-          top: "18%",
-          left: "8%",
-          width: 56,
-          height: 56,
-          background: "rgba(196,181,208,0.22)",
-          border: "1px solid rgba(196,181,208,0.3)",
-          borderRadius: 6,
-          transformStyle: "preserve-3d",
-        }}
-        animate={{
-          rotateY: [0, 360],
-          y: [0, -12, 0],
-        }}
-        transition={{
-          rotateY: { duration: 14, repeat: Infinity, ease: "linear" },
-          y: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-        }}
-      />
-
-      {/* CSS 3D rotating cube — bottom right */}
-      <div
-        className="perspective-container absolute"
-        style={{ bottom: "22%", right: "6%", width: 80, height: 80 }}
+      {/* Film grain — the most important texture layer */}
+      <svg
+        className="absolute inset-0 w-full h-full"
+        style={{ opacity: 0.09, mixBlendMode: "screen" }}
+        aria-hidden="true"
       >
+        <filter id="grain-dark">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.68"
+            numOctaves="4"
+            seed="14"
+            stitchTiles="stitch"
+          />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain-dark)" />
+      </svg>
+
+      {/* Deep gradient orbs — barely visible, just break the flat black */}
+      {orbs.map((orb, i) => (
         <motion.div
-          className="cube"
-          animate={{ rotateY: [0, 360], rotateX: [15, 15] }}
-          transition={{ rotateY: { duration: 28, repeat: Infinity, ease: "linear" } }}
-        >
-          <div className="cube-face cube-front" />
-          <div className="cube-face cube-back" />
-          <div className="cube-face cube-left" />
-          <div className="cube-face cube-right" />
-          <div className="cube-face cube-top" />
-          <div className="cube-face cube-bottom" />
-        </motion.div>
-      </div>
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width:  orb.size,
+            height: orb.size,
+            left:   orb.x,
+            top:    orb.y,
+            transform: "translate(-50%, -50%)",
+            background: `radial-gradient(circle at 38% 38%, rgba(${orb.r},${orb.op}) 0%, transparent 65%)`,
+            filter: "blur(2px)",
+          }}
+          animate={{
+            x:     [0, 20, -14, 16, 0],
+            y:     [0, -16, 22, -10, 0],
+            scale: [1, 1.03, 0.98, 1.02, 1],
+          }}
+          transition={{
+            duration: orb.dur,
+            delay:    orb.delay,
+            repeat:   Infinity,
+            ease:     "easeInOut",
+          }}
+        />
+      ))}
 
-      {/* Soft bloom — center */}
+      {/* Vignette — pulls edges to pure black */}
       <div
+        className="absolute inset-0"
         style={{
-          position: "absolute",
-          top: "30%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 600,
-          height: 600,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(196,181,208,0.10) 0%, transparent 70%)",
-          filter: "blur(60px)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Top bloom */}
-      <div
-        style={{
-          position: "absolute",
-          top: "-10%",
-          right: "20%",
-          width: 400,
-          height: 400,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(212,165,165,0.10) 0%, transparent 70%)",
-          filter: "blur(50px)",
-          pointerEvents: "none",
+          background: "radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(10,9,8,0.85) 100%)",
         }}
       />
     </div>
