@@ -344,30 +344,6 @@ export default function AestheticMap({ result, description }: Props) {
             );
           })}
 
-          {/* Brief pull dashed direction vector */}
-          {ready && (() => {
-            const pulls = nodes.filter((n) => n.isBriefPull && n.kind !== "creator");
-            const creator = nodes.find((n) => n.id === "creator");
-            if (!pulls.length || !creator) return null;
-            const cx = pulls.reduce((s, n) => s + n.x, 0) / pulls.length;
-            const cy = pulls.reduce((s, n) => s + n.y, 0) / pulls.length;
-            const dx = cx - creator.x;
-            const dy = cy - creator.y;
-            const len = Math.sqrt(dx * dx + dy * dy) || 1;
-            const endX = creator.x + (dx / len) * (len - 28);
-            const endY = creator.y + (dy / len) * (len - 28);
-            return (
-              <motion.line
-                x1={creator.x} y1={creator.y} x2={endX} y2={endY}
-                stroke="rgba(106,138,114,0.6)"
-                strokeWidth={1.5}
-                strokeDasharray="5 4"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 2, delay: 1.5 }}
-              />
-            );
-          })()}
 
           {/* Brief pull halos */}
           {ready && nodes.filter((n) => n.isBriefPull && n.kind !== "creator").map((n) => (

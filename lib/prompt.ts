@@ -27,7 +27,7 @@ If you can read it: set isVague: false, vaguenessQuestion: null, and complete th
 ---
 
 ACT 1 — THE MIRROR:
-Identify 3 specific cultural nodes — named subcultures, movements, scenes, moments — that are subconsciously active in the work. Pull them from the visual evidence in the image and the words in the description.
+Identify 4 specific cultural nodes — named subcultures, movements, scenes, moments — that are subconsciously active in the work. Pull them from the visual evidence in the image and the words in the description.
 
 For each node:
 - id: Short unique string. Use "n1", "n2", "n3", "n4", "n5" in order. Never reuse an id.

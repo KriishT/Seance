@@ -5,6 +5,7 @@ import type { MirrorNode } from "@/app/api/diagnose/route";
 
 interface MirrorActProps {
   nodes: MirrorNode[];
+  imageMap?: Record<string, string | null>;
 }
 
 const NODE_ACCENTS = [
@@ -15,7 +16,7 @@ const NODE_ACCENTS = [
   { bg: "bg-lavender-light", border: "border-lavender", dot: "bg-lavender" },
 ];
 
-export default function MirrorAct({ nodes }: MirrorActProps) {
+export default function MirrorAct({ nodes, imageMap = {} }: MirrorActProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -46,11 +47,11 @@ export default function MirrorAct({ nodes }: MirrorActProps) {
             >
               <div className="flex gap-0">
                 {/* Archival image strip */}
-                {node.imageUrl && (
+                {(imageMap[node.id] ?? node.imageUrl) && (
                   <div className="w-28 flex-shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={node.imageUrl}
+                      src={(imageMap[node.id] ?? node.imageUrl)!}
                       alt={node.name}
                       className="w-full h-full object-cover opacity-80"
                       style={{ minHeight: "140px" }}

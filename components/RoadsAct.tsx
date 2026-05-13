@@ -6,6 +6,7 @@ import type { RoadEntry } from "@/app/api/diagnose/route";
 
 interface RoadsActProps {
   roads: RoadEntry[];
+  imageMap?: Record<string, string | null>;
 }
 
 const MEDIUM_STYLES: Record<RoadEntry["medium"], { label: string; color: string }> = {
@@ -16,7 +17,7 @@ const MEDIUM_STYLES: Record<RoadEntry["medium"], { label: string; color: string 
   "writing/zine": { label: "Writing / Zine", color: "#9A7575" },
 };
 
-export default function RoadsAct({ roads }: RoadsActProps) {
+export default function RoadsAct({ roads, imageMap = {} }: RoadsActProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = roads.find((r) => r.id === selectedId);
 
@@ -57,11 +58,11 @@ export default function RoadsAct({ roads }: RoadsActProps) {
             >
               <div className="flex gap-0">
                 {/* Image */}
-                {road.imageUrl && (
+                {(imageMap[road.id] ?? road.imageUrl) && (
                   <div className="w-20 flex-shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={road.imageUrl}
+                      src={(imageMap[road.id] ?? road.imageUrl)!}
                       alt={road.title}
                       className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? "opacity-80" : "opacity-50 group-hover:opacity-65"}`}
                       style={{ minHeight: "110px" }}

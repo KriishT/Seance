@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MirrorAct from "./MirrorAct";
 import RoadsAct from "./RoadsAct";
@@ -28,6 +28,29 @@ export default function DiagnosisReveal({ result, description, onReset }: Diagno
   const [roadsUnlocked, setRoadsUnlocked] = useState(false);
   const [briefUnlocked, setBriefUnlocked] = useState(false);
   const [mapUnlocked, setMapUnlocked] = useState(false);
+  const [imageMap, setImageMap] = useState<Record<string, string | null>>({});
+  const imagesFetchedRef = useRef(false);
+
+  useEffect(() => {
+    if (imagesFetchedRef.current) return;
+    imagesFetchedRef.current = true;
+    const queries = [
+      ...result.mirror.nodes.map((n) => ({ id: n.id, query: n.imageQuery, kind: "mirror" as const })),
+      ...result.roadsTaken.map((r) => ({ id: r.id, query: r.imageQuery, kind: "road" as const })),
+    ];
+    fetch("/api/images", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ queries }),
+    })
+      .then((r) => r.json())
+      .then(({ images }: { images: { id: string; imageUrl: string | null }[] }) => {
+        const map: Record<string, string | null> = {};
+        images.forEach(({ id, imageUrl }) => { map[id] = imageUrl; });
+        setImageMap(map);
+      })
+      .catch(() => {});
+  }, [result]);
 
   useEffect(() => {
     const t1 = setTimeout(() => setRoadsUnlocked(true), 4500);
@@ -99,7 +122,7 @@ export default function DiagnosisReveal({ result, description, onReset }: Diagno
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <MirrorAct nodes={result.mirror.nodes} />
+            <MirrorAct nodes={result.mirror.nodes} imageMap={imageMap} />
             {roadsUnlocked && (
               <motion.button
                 initial={{ opacity: 0 }}
@@ -122,7 +145,7 @@ export default function DiagnosisReveal({ result, description, onReset }: Diagno
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <RoadsAct roads={result.roadsTaken} />
+            <RoadsAct roads={result.roadsTaken} imageMap={imageMap} />
             {briefUnlocked && (
               <motion.button
                 initial={{ opacity: 0 }}
