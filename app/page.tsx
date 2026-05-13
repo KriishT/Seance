@@ -28,7 +28,7 @@ export default function Home() {
     setState({ phase: "loading" });
     try {
       const res = await fetch("/api/diagnose", { method: "POST", body: formData });
-      const data: DiagnosisResult & { error?: string } = await res.json();
+      let data: DiagnosisResult & { error?: string } = await res.json();
 
       if (!res.ok || data.error) {
         setState({ phase: "error", message: data.error ?? "Something went wrong." });
