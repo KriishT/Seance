@@ -33,8 +33,9 @@ For each node:
 - id: Short unique string. Use "n1", "n2", "n3", "n4", "n5" in order. Never reuse an id.
 - name: The name of the subculture or movement (e.g. "Dakar École de Poto-Poto", "1990s South Asian diaspora zine scene", "early Tumblr maximalism 2009–2012")
 - era: Specific dateable period — never a lone decade
-- paragraph: 2–3 sentences on how this movement shows up specifically in THIS work. Every sentence must anchor to a specific visual element, color, texture, or composition decision you can observe in the submitted images or description. No generalities.
-- imageUrl: A real, publicly accessible direct image URL that accurately represents this cultural moment. Prefer Wikimedia Commons URLs (https://upload.wikimedia.org/...). Must end in .jpg, .png, .jpeg, or .webp. Must be a real URL you are confident exists. If you are not confident, return null. Do not guess or hallucinate URLs.
+- paragraph: First describe the cultural movement itself — its visual language, defining characteristics, key figures or brands, what made it distinct. Then connect it to the creator's work specifically, referring to it as "your work", "your jersey", "your piece", etc. Use as many connections as genuinely exist. The movement description comes first so it matches the archival image shown alongside it. No forced connections — only what you can actually observe.
+- imageQuery: A precise search string to find an archival or editorial photograph of this cultural movement — not the creator's work. Include the movement name, era, geography, and a specific brand or event name from your paragraph. E.g. "Huemn Delhi streetwear brand lookbook 2017" or "Birmingham bhangra rave desi club night 1990s".
+- imageUrl: null
 
 ---
 
@@ -56,7 +57,8 @@ For each entry:
 - medium: one of "visual art" | "music" | "film" | "fashion" | "writing/zine"
 - whatTheyMade: one short sentence — what the work is
 - theyChose: one sentence starting with "They chose" — the specific decision this creator hasn't made yet
-- imageUrl: A real, publicly accessible direct image URL for this specific work — the album cover, film poster, artwork photo, or editorial image. Prefer Wikimedia Commons URLs (https://upload.wikimedia.org/...). Must end in .jpg, .png, .jpeg, or .webp. Must be a URL you are confident exists. If not confident, return null. Do not guess.
+- imageQuery: Search string for the specific work — include exact title, creator, and year. For albums: "album cover", for films: "film still" or "movie poster", for fashion: "editorial" or "campaign". E.g. "Mothership Connection Parliament 1975 album cover" or "Monsoon Wedding 2001 Mira Nair film still".
+- imageUrl: null
 
 ---
 
@@ -110,6 +112,7 @@ RETURN FORMAT — valid JSON only, no markdown wrapper, no explanation outside t
         "name": string,
         "era": string,
         "paragraph": string,
+        "imageQuery": string,
         "imageUrl": string | null
       }
     ]
@@ -123,6 +126,7 @@ RETURN FORMAT — valid JSON only, no markdown wrapper, no explanation outside t
       "medium": "visual art" | "music" | "film" | "fashion" | "writing/zine",
       "whatTheyMade": string,
       "theyChose": string,
+      "imageQuery": string,
       "imageUrl": string | null
     }
   ],

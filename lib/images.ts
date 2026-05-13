@@ -17,9 +17,8 @@ async function fetchSerpImage(query: string): Promise<string | null> {
       return null;
     }
     const img = results[0];
-    const url2 = img.original ?? img.thumbnail ?? null;
     console.log(`[images] SerpAPI: found image for "${query}"`);
-    return url2;
+    return img.original ?? img.thumbnail ?? null;
   } catch (err) {
     console.error(`[images] SerpAPI error for "${query}":`, err);
     return null;
