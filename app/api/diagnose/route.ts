@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 60;
 import { DIAGNOSIS_SYSTEM_PROMPT } from "@/lib/prompt";
-import { fetchMirrorImage, fetchRoadImage } from "@/lib/images";
 import { saveShare } from "@/lib/store";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
@@ -154,31 +153,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(parsed);
     }
 
-    // Fetch archival images for mirror nodes and roads in parallel
-    // Mirror nodes: Met API first (art-historical), falls back to SerpAPI
-    // Roads: SerpAPI only (spans music/film/fashion)
-    const [nodesWithImages, roadsWithImages] = await Promise.all([
-      Promise.all(
-        parsed.mirror.nodes.map(async (node) => ({
-          ...node,
-          imageUrl: await fetchMirrorImage(node.imageQuery),
-        }))
-      ),
-      Promise.all(
-        parsed.roadsTaken.map(async (entry) => ({
-          ...entry,
-          imageUrl: await fetchRoadImage(entry.imageQuery),
-        }))
-      ),
-    ]);
-
     const shareId = crypto.randomUUID();
     saveShare(shareId, { brief: parsed.brief });
 
     return NextResponse.json({
       ...parsed,
-      mirror: { nodes: nodesWithImages },
-      roadsTaken: roadsWithImages,
+      mirror: { nodes: parsed.mirror.nodes.map((n) => ({ ...n, imageUrl: null })) },
+      roadsTaken: parsed.roadsTaken.map((r) => ({ ...r, imageUrl: null })),
       shareId,
     });
   } catch (err) {
