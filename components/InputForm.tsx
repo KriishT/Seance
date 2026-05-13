@@ -10,7 +10,7 @@ interface InputFormProps {
 }
 
 const MAX_WORDS = 30;
-const MAX_IMAGES = 4;
+const MAX_IMAGES = 2;
 
 function countWords(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -221,7 +221,7 @@ export default function InputForm({ onSubmit, loading, onOpenDrift }: InputFormP
               <span className="text-muted/50 text-[9px] font-sans uppercase tracking-[0.2em]">
                 Drop images or click to upload
               </span>
-              <span className="text-muted/50 text-[9px] font-sans tracking-wide">jpg · png · webp · up to 4</span>
+              <span className="text-muted/50 text-[9px] font-sans tracking-wide">jpg · png · webp · up to 2</span>
             </div>
           )}
 
