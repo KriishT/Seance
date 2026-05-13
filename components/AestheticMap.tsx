@@ -106,7 +106,9 @@ export default function AestheticMap({ result, description }: Props) {
   const [error, setError] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [imageMap, setImageMap] = useState<Record<string, string | null>>({});
   const fetchedRef = useRef(false);
+  const imagesFetchedRef = useRef(false);
 
   const fetchMap = useCallback(async () => {
     if (fetchedRef.current) return;
@@ -128,6 +130,27 @@ export default function AestheticMap({ result, description }: Props) {
   }, [result, description]);
 
   useEffect(() => { fetchMap(); }, [fetchMap]);
+
+  useEffect(() => {
+    if (imagesFetchedRef.current) return;
+    imagesFetchedRef.current = true;
+    const queries = [
+      ...result.mirror.nodes.map((n) => ({ id: n.id, query: n.imageQuery, kind: "mirror" as const })),
+      ...result.roadsTaken.map((r) => ({ id: r.id, query: r.imageQuery, kind: "road" as const })),
+    ];
+    fetch("/api/images", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ queries }),
+    })
+      .then((r) => r.json())
+      .then(({ images }: { images: { id: string; imageUrl: string | null }[] }) => {
+        const map: Record<string, string | null> = {};
+        images.forEach(({ id, imageUrl }) => { map[id] = imageUrl; });
+        setImageMap(map);
+      })
+      .catch(() => {});
+  }, [result]);
 
   useEffect(() => {
     if (!mapData) return;
@@ -444,11 +467,11 @@ export default function AestheticMap({ result, description }: Props) {
             className="border border-wire bg-surface grid grid-cols-1 md:grid-cols-3 gap-0 overflow-hidden"
           >
             {/* Image column */}
-            {(mirrorNode?.imageUrl || roadEntry?.imageUrl) && (
+            {(imageMap[selectedId!] || (!Object.keys(imageMap).length && (mirrorNode?.imageUrl || roadEntry?.imageUrl))) && (
               <div className="md:col-span-1 bg-void">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={mirrorNode?.imageUrl ?? roadEntry?.imageUrl ?? ""}
+                  src={imageMap[selectedId!] ?? mirrorNode?.imageUrl ?? roadEntry?.imageUrl ?? ""}
                   alt={selectedNode.fullLabel}
                   className="w-full h-full object-cover opacity-70"
                   style={{ minHeight: "200px", maxHeight: "320px" }}
@@ -507,10 +530,10 @@ export default function AestheticMap({ result, description }: Props) {
                   <div className="space-y-2">
                     {studyRefs.map((ref) => (
                       <div key={ref.id} className="flex items-start gap-3">
-                        {ref.imageUrl && (
+                        {imageMap[ref.id] && (
                           // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={ref.imageUrl}
+                            src={imageMap[ref.id]!}
                             alt={ref.title}
                             className="w-10 h-10 object-cover flex-shrink-0 opacity-70"
                           />

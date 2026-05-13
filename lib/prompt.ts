@@ -27,7 +27,7 @@ If you can read it: set isVague: false, vaguenessQuestion: null, and complete th
 ---
 
 ACT 1 — THE MIRROR:
-Identify 4–5 specific cultural nodes — named subcultures, movements, scenes, moments — that are subconsciously active in the work. Pull them from the visual evidence in the image and the words in the description.
+Identify 3 specific cultural nodes — named subcultures, movements, scenes, moments — that are subconsciously active in the work. Pull them from the visual evidence in the image and the words in the description.
 
 For each node:
 - id: Short unique string. Use "n1", "n2", "n3", "n4", "n5" in order. Never reuse an id.
@@ -40,7 +40,7 @@ For each node:
 ---
 
 ACT 2 — THE ROADS TAKEN:
-Identify 6–8 real, existing works — one from each of the following mediums where possible: visual art, music, film, fashion, writing/zine. These works must have operated in the same aesthetic tension as the creator's work and resolved it differently.
+Identify 4 real, existing works — spread across different mediums (visual art, music, film, fashion, writing/zine) where possible. These works must have operated in the same aesthetic tension as the creator's work and resolved it differently.
 
 Rules:
 - Every work must be real and verifiable
@@ -50,7 +50,7 @@ Rules:
 - imageQuery: a search term to find a real image of this work (album cover, film still, artwork photo, lookbook image, zine scan)
 
 For each entry:
-- id: Short unique string. Use "r1", "r2", "r3" ... "r8" in order. Never reuse an id.
+- id: Short unique string. Use "r1", "r2", "r3", "r4" in order. Never reuse an id.
 - title: name of the work
 - creator: artist/director/designer/author name
 - year: release or exhibition year
@@ -67,9 +67,9 @@ One specific thing that doesn't exist yet that this creator is positioned to mak
 
 - thingThatDoesntExist: One sentence. Name the medium. Name the scale or form. Name the specific subject or site. Never use the words "series", "exploration", "meditation", "investigation", "journey", "dialogue", or "practice". Something a gallery director or publisher could act on today: "A photobook of 40 images documenting the interiors of abandoned South Asian textile factories in Leicester, printed on uncoated stock, with no captions."
 
-- includes: 3–5 things the work will include. Each item must trace directly to something specific you can observe in the submitted images or description — a color, a material, a formal decision, a recurring motif. Not what you hope the work will do. What you can already see it doing.
+- includes: 3 things the work will include. Each item must trace directly to something specific you can observe in the submitted images or description — a color, a material, a formal decision, a recurring motif. Not what you hope the work will do. What you can already see it doing.
 
-- refusals: 3–5 refusals. Each refusal is a specific aesthetic or conceptual choice this work must refuse to make, with a one-sentence "because" grounded in a specific visual or textual observation from the submitted work. If you cannot point to something specific in the submitted work that makes this refusal necessary, do not write it. This is the most important part of the output — it tells the creator what to leave behind, and why that leaving-behind matters.
+- refusals: 3 refusals. Each refusal is a specific aesthetic or conceptual choice this work must refuse to make, with a one-sentence "because" grounded in a specific visual or textual observation from the submitted work. If you cannot point to something specific in the submitted work that makes this refusal necessary, do not write it. This is the most important part of the output — it tells the creator what to leave behind, and why that leaving-behind matters.
   Format: { "what": "the thing refused", "because": "one sentence reason anchored in what you see" }
 
 - whyYou: 2–3 sentences. Cite at least one specific visual detail from the uploaded images as evidence — something you can actually see, not a feeling about it. Not "your sensitivity to X" or "your exploration of Y." An argument: here is the specific evidence, here is what it means about this creator's particular position.  Also — if the work references other artists, cultures, or movements, name them here. Art theft begins when lineage goes unnamed.
