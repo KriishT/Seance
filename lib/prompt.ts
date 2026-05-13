@@ -34,8 +34,7 @@ For each node:
 - name: The name of the subculture or movement (e.g. "Dakar École de Poto-Poto", "1990s South Asian diaspora zine scene", "early Tumblr maximalism 2009–2012")
 - era: Specific dateable period — never a lone decade
 - paragraph: 2–3 sentences on how this movement shows up specifically in THIS work. Every sentence must anchor to a specific visual element, color, texture, or composition decision you can observe in the submitted images or description. No generalities.
-- imageQuery: A precise search string to find one real archival image from this cultural moment (e.g. "Dakar Poto-Poto school painters 1960s workshop photographs")
-- imageUrl: always null — this is populated server-side
+- imageUrl: A real, publicly accessible direct image URL that accurately represents this cultural moment. Prefer Wikimedia Commons URLs (https://upload.wikimedia.org/...). Must end in .jpg, .png, .jpeg, or .webp. Must be a real URL you are confident exists. If you are not confident, return null. Do not guess or hallucinate URLs.
 
 ---
 
@@ -57,8 +56,7 @@ For each entry:
 - medium: one of "visual art" | "music" | "film" | "fashion" | "writing/zine"
 - whatTheyMade: one short sentence — what the work is
 - theyChose: one sentence starting with "They chose" — the specific decision this creator hasn't made yet
-- imageQuery: search string for a real image of this work
-- imageUrl: always null — populated server-side
+- imageUrl: A real, publicly accessible direct image URL for this specific work — the album cover, film poster, artwork photo, or editorial image. Prefer Wikimedia Commons URLs (https://upload.wikimedia.org/...). Must end in .jpg, .png, .jpeg, or .webp. Must be a URL you are confident exists. If not confident, return null. Do not guess.
 
 ---
 
@@ -112,7 +110,6 @@ RETURN FORMAT — valid JSON only, no markdown wrapper, no explanation outside t
         "name": string,
         "era": string,
         "paragraph": string,
-        "imageQuery": string,
         "imageUrl": string | null
       }
     ]
@@ -126,7 +123,6 @@ RETURN FORMAT — valid JSON only, no markdown wrapper, no explanation outside t
       "medium": "visual art" | "music" | "film" | "fashion" | "writing/zine",
       "whatTheyMade": string,
       "theyChose": string,
-      "imageQuery": string,
       "imageUrl": string | null
     }
   ],

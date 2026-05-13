@@ -49,34 +49,6 @@ export default function Home() {
         return;
       }
 
-      // Fetch images while still showing loading screen
-      const queries = [
-        ...data.mirror.nodes.map((n) => ({ id: n.id, query: n.imageQuery, kind: "mirror" as const })),
-        ...data.roadsTaken.map((r) => ({ id: r.id, query: r.imageQuery, kind: "road" as const })),
-      ];
-      console.log(`[images] fetching ${queries.length} images...`);
-      try {
-        const imgStart = Date.now();
-        const imgRes = await fetch("/api/images", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ queries }),
-        });
-        console.log(`[images] responded in ${Date.now() - imgStart}ms — status ${imgRes.status}`);
-        const { images } = await imgRes.json();
-        const found = images.filter((i: { imageUrl: string | null }) => i.imageUrl).length;
-        console.log(`[images] got ${found}/${queries.length} images`);
-        const imgMap: Record<string, string | null> = {};
-        images.forEach(({ id, imageUrl }: { id: string; imageUrl: string | null }) => { imgMap[id] = imageUrl; });
-        data = {
-          ...data,
-          mirror: { nodes: data.mirror.nodes.map((n) => ({ ...n, imageUrl: imgMap[n.id] ?? null })) },
-          roadsTaken: data.roadsTaken.map((r) => ({ ...r, imageUrl: imgMap[r.id] ?? null })),
-        };
-      } catch (imgErr) {
-        console.error("[images] failed:", imgErr);
-      }
-
       saveDriftSession(data);
       setState({ phase: "result", result: data });
     } catch (err) {

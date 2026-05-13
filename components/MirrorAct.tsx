@@ -54,6 +54,7 @@ export default function MirrorAct({ nodes }: MirrorActProps) {
                       alt={node.name}
                       className="w-full h-full object-cover opacity-80"
                       style={{ minHeight: "140px" }}
+                      onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
                     />
                   </div>
                 )}

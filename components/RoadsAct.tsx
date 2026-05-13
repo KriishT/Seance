@@ -62,6 +62,7 @@ export default function RoadsAct({ roads }: RoadsActProps) {
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={road.imageUrl!}
+                      onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = "none"; }}
                       alt={road.title}
                       className={`w-full h-full object-cover transition-opacity duration-300 ${isSelected ? "opacity-80" : "opacity-50 group-hover:opacity-65"}`}
                       style={{ minHeight: "110px" }}
