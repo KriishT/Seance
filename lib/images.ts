@@ -11,7 +11,7 @@ async function fetchMetImage(query: string): Promise<string | null> {
     if (ids.length === 0) return null;
 
     // Try the first few results until we find one with a public-domain primary image
-    for (const id of ids.slice(0, 5)) {
+    for (const id of ids.slice(0, 2)) {
       const objRes = await fetch(
         `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`,
         { next: { revalidate: 86400 } }
@@ -56,14 +56,18 @@ async function fetchSerpImage(query: string): Promise<string | null> {
   }
 }
 
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
+  return Promise.race([promise, new Promise<null>((res) => setTimeout(() => res(null), ms))]);
+}
+
 // Mirror nodes are art-historical — try Met first, fall back to Serp
 export async function fetchMirrorImage(query: string): Promise<string | null> {
-  const met = await fetchMetImage(query);
+  const met = await withTimeout(fetchMetImage(query), 4000);
   if (met) return met;
-  return fetchSerpImage(query);
+  return withTimeout(fetchSerpImage(query), 4000);
 }
 
 // Roads entries span music/film/fashion — SerpAPI only
 export async function fetchRoadImage(query: string): Promise<string | null> {
-  return fetchSerpImage(query);
+  return withTimeout(fetchSerpImage(query), 4000);
 }

@@ -108,8 +108,8 @@ export async function POST(req: NextRequest) {
     );
 
     const response = await anthropic.messages.create({
-      model: "claude-opus-4-7",
-      max_tokens: 8000,
+      model: "claude-sonnet-4-6",
+      max_tokens: 4000,
       system: DIAGNOSIS_SYSTEM_PROMPT,
       messages: [
         {
