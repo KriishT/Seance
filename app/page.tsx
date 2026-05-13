@@ -45,6 +45,24 @@ export default function Home() {
         return;
       }
 
+      // Fetch images while still showing loading screen
+      const queries = [
+        ...data.mirror.nodes.map((n) => ({ id: n.id, query: n.imageQuery, kind: "mirror" as const })),
+        ...data.roadsTaken.map((r) => ({ id: r.id, query: r.imageQuery, kind: "road" as const })),
+      ];
+      try {
+        const imgRes = await fetch("/api/images", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ queries }),
+        });
+        const { images } = await imgRes.json();
+        const imgMap: Record<string, string | null> = {};
+        images.forEach(({ id, imageUrl }: { id: string; imageUrl: string | null }) => { imgMap[id] = imageUrl; });
+        data.mirror.nodes = data.mirror.nodes.map((n) => ({ ...n, imageUrl: imgMap[n.id] ?? null }));
+        data.roadsTaken = data.roadsTaken.map((r) => ({ ...r, imageUrl: imgMap[r.id] ?? null }));
+      } catch { /* images fail silently */ }
+
       saveDriftSession(data);
       setState({ phase: "result", result: data });
     } catch {
