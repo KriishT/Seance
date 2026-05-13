@@ -90,16 +90,18 @@ export async function POST(req: NextRequest) {
     const imageBlocks = await Promise.all(
       imageFiles.map(async (file) => {
         const bytes = await file.arrayBuffer();
+        const buf = Buffer.from(bytes);
+        // Detect actual format from magic bytes, ignore file.type
+        let media_type: "image/jpeg" | "image/png" | "image/gif" | "image/webp" = "image/jpeg";
+        if (buf[0] === 0x89 && buf[1] === 0x50) media_type = "image/png";
+        else if (buf[0] === 0x47 && buf[1] === 0x49) media_type = "image/gif";
+        else if (buf[0] === 0x52 && buf[1] === 0x49) media_type = "image/webp";
         return {
           type: "image" as const,
           source: {
             type: "base64" as const,
-            media_type: (file.type || "image/jpeg") as
-              | "image/jpeg"
-              | "image/png"
-              | "image/gif"
-              | "image/webp",
-            data: Buffer.from(bytes).toString("base64"),
+            media_type,
+            data: buf.toString("base64"),
           },
         };
       })
