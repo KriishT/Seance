@@ -33,7 +33,7 @@ For each node:
 - id: Short unique string. Use "n1", "n2", "n3", "n4", "n5" in order. Never reuse an id.
 - name: The name of the subculture or movement (e.g. "Dakar École de Poto-Poto", "1990s South Asian diaspora zine scene", "early Tumblr maximalism 2009–2012")
 - era: Specific dateable period — never a lone decade
-- paragraph: One paragraph (3–5 sentences) on how this movement shows up specifically in THIS work. Do not explain what the movement was in general — every sentence must anchor to a specific visual element, color, texture, composition decision, or word choice you can actually observe in the submitted images or description. This is the paragraph the artist will screenshot.
+- paragraph: 2–3 sentences on how this movement shows up specifically in THIS work. Every sentence must anchor to a specific visual element, color, texture, or composition decision you can observe in the submitted images or description. No generalities.
 - imageQuery: A precise search string to find one real archival image from this cultural moment (e.g. "Dakar Poto-Poto school painters 1960s workshop photographs")
 - imageUrl: always null — this is populated server-side
 
@@ -55,7 +55,7 @@ For each entry:
 - creator: artist/director/designer/author name
 - year: release or exhibition year
 - medium: one of "visual art" | "music" | "film" | "fashion" | "writing/zine"
-- whatTheyMade: one sentence — what the work is, specifically
+- whatTheyMade: one short sentence — what the work is
 - theyChose: one sentence starting with "They chose" — the specific decision this creator hasn't made yet
 - imageQuery: search string for a real image of this work
 - imageUrl: always null — populated server-side
@@ -72,7 +72,7 @@ One specific thing that doesn't exist yet that this creator is positioned to mak
 - refusals: 3 refusals. Each refusal is a specific aesthetic or conceptual choice this work must refuse to make, with a one-sentence "because" grounded in a specific visual or textual observation from the submitted work. If you cannot point to something specific in the submitted work that makes this refusal necessary, do not write it. This is the most important part of the output — it tells the creator what to leave behind, and why that leaving-behind matters.
   Format: { "what": "the thing refused", "because": "one sentence reason anchored in what you see" }
 
-- whyYou: 2–3 sentences. Cite at least one specific visual detail from the uploaded images as evidence — something you can actually see, not a feeling about it. Not "your sensitivity to X" or "your exploration of Y." An argument: here is the specific evidence, here is what it means about this creator's particular position.  Also — if the work references other artists, cultures, or movements, name them here. Art theft begins when lineage goes unnamed.
+- whyYou: 2 sentences max. Cite one specific visual detail as evidence. Name any cultural lineage the work draws from.
 
 - provenanceNote: One sentence. Name the specific cultural lineage the work draws from so the creator can cite their influences precisely. A timestamped record of what they were building from, written as though it might appear in a colophon.
 

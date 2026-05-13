@@ -27,10 +27,14 @@ export default function Home() {
     if (desc) setLastDescription(desc);
     setState({ phase: "loading" });
     try {
+      console.log("[diagnose] starting...");
+      const diagnoseStart = Date.now();
       const res = await fetch("/api/diagnose", { method: "POST", body: formData });
+      console.log(`[diagnose] responded in ${Date.now() - diagnoseStart}ms — status ${res.status}`);
       let data: DiagnosisResult & { error?: string } = await res.json();
 
       if (!res.ok || data.error) {
+        console.error("[diagnose] error response:", data.error);
         setState({ phase: "error", message: data.error ?? "Something went wrong." });
         return;
       }
@@ -50,13 +54,18 @@ export default function Home() {
         ...data.mirror.nodes.map((n) => ({ id: n.id, query: n.imageQuery, kind: "mirror" as const })),
         ...data.roadsTaken.map((r) => ({ id: r.id, query: r.imageQuery, kind: "road" as const })),
       ];
+      console.log(`[images] fetching ${queries.length} images...`);
       try {
+        const imgStart = Date.now();
         const imgRes = await fetch("/api/images", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ queries }),
         });
+        console.log(`[images] responded in ${Date.now() - imgStart}ms — status ${imgRes.status}`);
         const { images } = await imgRes.json();
+        const found = images.filter((i: { imageUrl: string | null }) => i.imageUrl).length;
+        console.log(`[images] got ${found}/${queries.length} images`);
         const imgMap: Record<string, string | null> = {};
         images.forEach(({ id, imageUrl }: { id: string; imageUrl: string | null }) => { imgMap[id] = imageUrl; });
         data = {
@@ -64,11 +73,14 @@ export default function Home() {
           mirror: { nodes: data.mirror.nodes.map((n) => ({ ...n, imageUrl: imgMap[n.id] ?? null })) },
           roadsTaken: data.roadsTaken.map((r) => ({ ...r, imageUrl: imgMap[r.id] ?? null })),
         };
-      } catch { /* images fail silently */ }
+      } catch (imgErr) {
+        console.error("[images] failed:", imgErr);
+      }
 
       saveDriftSession(data);
       setState({ phase: "result", result: data });
-    } catch {
+    } catch (err) {
+      console.error("[diagnose] fetch failed:", err);
       setState({ phase: "error", message: "Could not reach the server. Please try again." });
     }
   }

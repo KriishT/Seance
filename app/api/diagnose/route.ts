@@ -68,7 +68,15 @@ export async function POST(req: NextRequest) {
     const imageFiles: File[] = [];
     for (let i = 0; i < 4; i++) {
       const file = formData.get(`image_${i}`) as File | null;
-      if (file && file.size > 0) imageFiles.push(file);
+      if (file && file.size > 0) {
+        if (file.size > 3 * 1024 * 1024) {
+          return NextResponse.json(
+            { error: "Each image must be under 3MB. Export a smaller version and try again." },
+            { status: 400 }
+          );
+        }
+        imageFiles.push(file);
+      }
     }
 
     if (!description || imageFiles.length === 0) {
@@ -108,7 +116,7 @@ export async function POST(req: NextRequest) {
 
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 2000,
+      max_tokens: 1500,
       system: DIAGNOSIS_SYSTEM_PROMPT,
       messages: [
         {
